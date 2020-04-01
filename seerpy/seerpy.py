@@ -849,7 +849,7 @@ class SeerConnect:  # pylint: disable=too-many-public-methods
         return channel_groups
 
 
-    def get_diary_fitbit_data(self, segments):
+    def get_diary_fitbit_data(self, segments, output_datestring=True):
         """Get fitbit data from a patient's diary study
 
         Parameters
@@ -870,7 +870,10 @@ class SeerConnect:  # pylint: disable=too-many-public-methods
             start_time = datetime.utcfromtimestamp(start_times[idx]/1000)
             new_data = utils.get_diary_fitbit_data(url)
             # convert timestamps to true utc datetime
-            new_data['timestamp'] = start_time + pd.to_timedelta(new_data['timestamp'], unit='ms')
+            if output_datestring:
+                new_data['timestamp'] = start_time + pd.to_timedelta(new_data['timestamp'], unit='ms')
+            else:
+                new_data['timestamp'] = start_time + new_data['timestamp']
             new_data['name'] = group_names[idx]
             data_list.append(new_data)
 
